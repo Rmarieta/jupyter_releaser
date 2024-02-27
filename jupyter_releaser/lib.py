@@ -424,6 +424,8 @@ def publish_assets(
         util.log(f"Handling dist file {path}")
         suffix = Path(path).suffix
         if suffix in [".gz", ".whl"]:
+            pass
+            """
             dist: Union[Type[SDist], Type[Wheel]]
             dist = SDist if suffix == ".gz" else Wheel
             pkg = dist(path)
@@ -434,10 +436,11 @@ def publish_assets(
                 # a PYPI_TOKEN_MAP will not be sanitized in output
                 util.retry(f"{twine_cmd} {name}", cwd=dist_dir, env=env, echo=True)
                 found = True
+            """
         elif suffix == ".tgz":
             # Ignore already published versions
             try:
-                util.run(f"{npm_cmd} {name}", cwd=dist_dir, quiet=True, quiet_error=True, echo=True)
+                util.run(f"{npm_cmd} {name} --verbose", cwd=dist_dir, quiet=False, quiet_error=False, echo=True)
             except CalledProcessError as e:
                 stderr = e.stderr
                 if "EPUBLISHCONFLICT" in stderr or "previously published versions" in stderr:
